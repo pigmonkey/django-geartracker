@@ -1,0 +1,8 @@
+{% extends "geartracker/base.html" %}
+{% block title %}Gear Lists{% if is_paginated %} | Page {{ page }}{% endif %}{% endblock %}
+{% block entry %}
+
+<h1>Gear Lists</h1>
+
+{% include "geartracker/lists_list.html" %}
+{% endblock %}

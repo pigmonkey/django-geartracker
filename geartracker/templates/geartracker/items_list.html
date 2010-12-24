@@ -1,0 +1,19 @@
+{% if item_list %}
+<ul id="items">
+    {% for item in item_list %}
+        <li>
+            <h2><a href="{% url geartracker.views.item_detail item.slug %}" rel="bookmark" title="Link to {{ item }}">{{ item }}</a></h2>
+            <dl class="item-brief">
+                <dt>Metric Weight</dt>
+                    <dd>{{ item.metric_weight }}</dd>
+                <dt>Imperial Weight</dt>
+                    <dd>{{ item.imperial_weight }}</dd>
+                <dt>Acquired</dt>
+                    <dd>{{ item.acquired }}</dd>
+            </dl>
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No items found!</p>
+{% endif %}

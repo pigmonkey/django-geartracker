@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Gear Tracker{% endblock %}
+{% block content %}
+
+<ul id="gear-nav">
+    <li><a href="{% url items_view %}" title="View a list of all gear">All Gear</a></li>
+    <li><a href="{% url lists_view  %}" title="View all gear lists">Gear Lists</a></li>
+    <li><a href="{% url geartracker.views.categories_view 'ies' %}" title="View a list of categories">Categories</a></li>
+    <li><a href="{% url tags_view %}" title="View a list of tags">Tags</a></li>
+</ul>
+
+<div id="entry"{% block entry_class %}{% endblock %}>
+{% block entry %}
+{% endblock %}
+</div>
+{% endblock %}

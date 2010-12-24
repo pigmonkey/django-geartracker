@@ -1,0 +1,16 @@
+{% extends "geartracker/base.html" %}
+{% block title %}All Gear{% if is_paginated %} | Page {{ page }}{% endif %}{% endblock %}
+{% block entry %}
+
+<h1>All Gear</h1>
+
+{% include "geartracker/items_list.html" %}
+
+{% if is_paginated %}
+<ul class="page-list">
+    {% for pages in page_range %}
+    <li {% if page = pages %}class="current"{% endif %}><a href="{% url items_paginated page=pages %}" title="Page {{ pages }}">{{ pages }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

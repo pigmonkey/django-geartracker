@@ -1,0 +1,31 @@
+{% if list_list %}
+<ul id="lists">
+    {% for list in list_list %}
+        <li>
+            <h2><a href="{% url geartracker.views.gearlist_detail list.slug %}" rel="bookmark" title="Link to {{ list }}">{{ list }}</a></h2>
+            <dl class="list-brief">
+                <dt>Date{% if list.start_date != list.end_date %}s{% endif %}</dt>
+                    <dd>{% spaceless %}
+                    {% if list.start_date = list.end_date %}
+                    {{ list.start_date }}
+                    {% else %}
+                    {{ list.start_date }} &#8211; {{ list.end_date }}
+                    {% endif %}
+                    {% endspaceless %}</dd>
+                <dt>Total Weight</dt>
+                    <dd>{{ list.total_metric_weight }} ({{ list.total_imperial_weight }})</dd>
+            </dl>
+        </li>
+    {% endfor %}
+</ul>
+{% if is_paginated %}
+
+<ul class="page-list">
+    {% for pages in page_range %}
+    <li {% if page = pages %}class="current"{% endif %}><a href="{% url lists_paginated page=pages %}" title="Page {{ pages }}">{{ pages }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% else %}
+<p>No gear lists available!</p>
+{% endif %}

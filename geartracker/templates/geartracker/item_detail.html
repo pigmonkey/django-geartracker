@@ -1,0 +1,70 @@
+{% extends "geartracker/base.html" %}
+{% block title %}{{ item }}{% endblock %}
+{% block entry %}
+
+<h1>{{ item }}{% if item.link %} <a class="product-link" href="{{ item.link }}" title="Visit {{ item.make }}'s page for the {{ item.model }}">*</a>{% endif %}</h1>
+
+<ul id="breadcrumb">
+    <li><a href="{% url geartracker.views.items_by_category slug=item.category.slug  %}" title="View all gear in {{ item.category }}">{{ item.category|capfirst }}</a> {{ item.type.separator }}</li>
+    <li><a href="{% url geartracker.views.items_by_type cat_slug=item.category.slug type_slug=item.type.slug %}" title="View all gear in {{ item.type.name }}">{{ item.type.name|capfirst }}</a></li>
+</ul>
+
+{% if item.image %}
+{% spaceless %}
+    {% load thumbnail %}
+    
+    {% thumbnail item.image "400" as im %}
+    <a class="gear-image" href="{{ item.image.url }}"><img src="{{ im.url }}" width="{{ im.width }}px" height="{{ im.height }}px" alt="Photo of {{ item }}" title="View full size image" /></a>
+    {% endthumbnail %}
+{% endspaceless %}
+{% endif %}
+
+<ul id="gear-details">
+    <li class="weight">
+        <h2>Weight</h2>
+        <p>{{ item.metric_weight }} ({{ item.imperial_weight }})</p>
+    </li>
+    {% if item.size %}
+    <li class="size">
+        <h2>Size</h2>
+        <p>{{ item.size }}</p>
+    </li>
+    {% endif %}
+    <li class="acquired">
+        <h2>Acquired</h2>
+        <p>{{ item.acquired }}</p>
+    </li>
+    {% if item.review_url %}
+    <li>
+        <h2>Review</h2>
+        <p><a href="{{ item.review_url }}" title="Read a review of the {{ item }}">Read a review</a>.</p>
+    </li>
+    {% endif %}
+    {% if item.notes %}
+    <li class="notes">
+        <h2>Notes</h2>
+        {{ item.notes|safe|linebreaks }}
+    </li>
+    {% endif %}
+    {% if item.tags.all %}
+    <li class="tags">
+        <h2>Tags</h2>
+        <ul>
+            {% for tag in item.tags.all %}
+            <li><a href="{% url geartracker.views.items_by_tag slug=tag.slug %}" rel="tag" title="View all gear tagged with {{ tag }}">{{ tag }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endif %}
+    {% if item.related.all %}
+    <li class="related">
+        <h2>Related Items</h2>
+        <ul>
+            {% for other in item.related.all %}
+            <li><a href="{% url geartracker.views.item_detail slug=other.slug %}" title="Link to {{ other }}" rel="bookmark">{{ other }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endif %}
+</ul>
+{% endblock %}
