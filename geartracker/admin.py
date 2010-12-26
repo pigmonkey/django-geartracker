@@ -2,7 +2,7 @@ from django.contrib import admin
 from geartracker.models import *
 
 class ItemAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("make", "model")}
+    prepopulated_fields = {"slug": ("make", "model", "size")}
     list_display = ('__unicode__', 'type', 'metric_weight', 'acquired')
     list_filter = ('archived', 'category', 'type', 'make', 'tags')
     search_fields = ('make', 'model')

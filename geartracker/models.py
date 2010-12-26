@@ -89,7 +89,10 @@ class Item(models.Model):
         ordering = ('make', 'model')
     
     def __unicode__(self):
-        return u'%s %s' % (self.make, self.model)
+        if self.size:
+            return u'%s %s (%s)' % (self.make, self.model, self.size)
+        else:
+            return u'%s %s' % (self.make, self.model)
 
     @property
     def name(self):
