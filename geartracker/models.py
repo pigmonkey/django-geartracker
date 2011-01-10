@@ -94,6 +94,10 @@ class Item(models.Model):
         else:
             return u'%s %s' % (self.make, self.model)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('geartracker.views.item_detail', [self.slug])
+
     @property
     def name(self):
         return self.__unicode__()
@@ -154,6 +158,10 @@ class List(models.Model):
     
     def __unicode__(self):
         return self.name
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('geartracker.views.gearlist_detail', [self.slug])
 
     def clean(self):
         from django.core.exceptions import ValidationError
