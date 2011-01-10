@@ -4,6 +4,10 @@
 
 <h1>{{ item }}{% if item.link %} <a class="product-link" href="{{ item.link }}" title="Visit {{ item.make }}'s page for the {{ item.model }}">*</a>{% endif %}</h1>
 
+{% if perms.geartracker.change_item %}
+<a title="Edit {{ item }}" id="edit" href="{% url admin:geartracker_item_change item.id %}">Edit</a>
+{% endif %}
+
 <ul id="breadcrumb">
     <li><a href="{% url geartracker.views.items_by_category slug=item.category.slug  %}" title="View all gear in {{ item.category }}">{{ item.category|capfirst }}</a> {{ item.type.separator }}</li>
     <li><a href="{% url geartracker.views.items_by_type cat_slug=item.category.slug type_slug=item.type.slug %}" title="View all gear in {{ item.type.name }}">{{ item.type.name|capfirst }}</a></li>

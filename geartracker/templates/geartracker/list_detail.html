@@ -4,6 +4,10 @@
 
 <h1>{{ list }}</h1>
 
+{% if perms.geartracker.change_item %}
+<a title="Edit {{ item }}" id="edit" href="{% url admin:geartracker_list_change list.id %}">Edit</a>
+{% endif %}
+
 <p id="trip-date">
 {% spaceless %}
 {% if list.start_date = list.end_date %}
