@@ -20,5 +20,6 @@ setup(
     zip_safe=False,
     install_requires = ['pil',
                         'django-taggit',
+                        'django-taggit-templatetags',
                         'sorl-thumbnail',],
 )

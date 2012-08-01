@@ -52,6 +52,7 @@ Requirements
 * [sorl-thumbnail](http://thumbnail.sorl.net/) is used to generate thumbnails of images.
 * [Python Imaging Library](http://www.pythonware.com/products/pil/) is required for getting photo EXIF data.
 * [django-taggit](https://github.com/alex/django-taggit) is required for tagging.
+* [django-taggit-templatetags](https://github.com/feuervogel/django-taggit-templatetags) is required for listing tags in templates.
 
 
 Feedback
