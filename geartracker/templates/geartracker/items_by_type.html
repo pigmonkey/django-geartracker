@@ -1,4 +1,4 @@
-{% extends "geartracker/base.html" %}
+{% extends "geartracker/base_geartracker.html" %}
 {% block title %}{{ category|capfirst }} {{ type.separator }} {{ type.name|capfirst }}{% if is_paginated %} | Page {{ page }}{% endif %}{% endblock %}
 {% block entry %}
 
