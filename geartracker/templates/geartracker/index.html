@@ -4,14 +4,14 @@
 <div id="home-gear">
     <h1>Recent Gear</h1>
 
-    {% include "geartracker/items_list.html" %}
+    {% include "geartracker/includes/list_items.html" %}
 </div>
 
 {% if list_list %}
 <div id="home-lists">
     <h1>Recent Gear Lists</h1>
 
-    {% include "geartracker/lists_list.html" %}
+    {% include "geartracker/includes/list_lists.html" %}
 </div>
 {% endif %}
 {% endblock %}
