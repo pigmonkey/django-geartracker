@@ -12,6 +12,7 @@ def metric(grams):
     else:
         return u'%s %s' % (str(grams), 'g')
 
+
 def imperial(grams):
     """
     Converts grams to ounces.

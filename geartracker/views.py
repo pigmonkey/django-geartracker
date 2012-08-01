@@ -5,6 +5,7 @@ from django.http import Http404
 from operator import attrgetter, itemgetter
 from geartracker.models import Item, Category, Type, Tag, List, ListItem
 
+
 def item_detail(request, slug):
 
     # Look up item (and raise a 404 if it can't be found).
@@ -12,11 +13,12 @@ def item_detail(request, slug):
 
     return list_detail.object_detail(
         request,
-        queryset = Item.objects.all(),
-        object_id = item.id,
-        template_name = 'geartracker/item_detail.html',
-        template_object_name = 'item',
+        queryset=Item.objects.all(),
+        object_id=item.id,
+        template_name='geartracker/item_detail.html',
+        template_object_name='item',
     )
+
 
 def gearlist_detail(request, slug):
 
@@ -26,30 +28,33 @@ def gearlist_detail(request, slug):
     # A list is only viewable if the user is authenticated or if the list is
     # public. geartracker.add_list
     if request.user.has_perm('geartracker.add_list') or list.public:
-        # Get all packed items and sort them by category, then type. 
+        # Get all packed items and sort them by category, then type.
         packed_items = ListItem.objects.filter(list=list, type='packed')
         packed_items = sorted(packed_items,
-            key=attrgetter('item.category.name', 'item.type.name'),
-            reverse=False)
-        
-        # Get all worn items and sort them by category, then type. 
+                              key=attrgetter('item.category.name',
+                                             'item.type.name'),
+                              reverse=False)
+
+        # Get all worn items and sort them by category, then type.
         worn_items = ListItem.objects.filter(list=list, type='worn')
         worn_items = sorted(worn_items,
-            key=attrgetter('item.category.name', 'item.type.name'),
-            reverse=False)
+                            key=attrgetter('item.category.name',
+                                           'item.type.name'),
+                            reverse=False)
 
         return list_detail.object_detail(
             request,
-            queryset = List.objects.all(),
-            object_id = list.id,
-            template_name = 'geartracker/list_detail.html',
-            template_object_name = 'list',
-            extra_context = {'packed_items': packed_items,
-                'worn_items': worn_items}
+            queryset=List.objects.all(),
+            object_id=list.id,
+            template_name='geartracker/list_detail.html',
+            template_object_name='list',
+            extra_context={'packed_items': packed_items,
+                           'worn_items': worn_items}
         )
     # Anonymous users get a 404 when they try to view non-public lists
     else:
         raise Http404
+
 
 def items_by_category(request, slug, page=1):
 
@@ -59,13 +64,14 @@ def items_by_category(request, slug, page=1):
     # Use the generic object_list view to return the list of items
     return list_detail.object_list(
         request,
-        queryset = Item.objects.filter(category=category, archived=False),
-        template_name = 'geartracker/items_by_category.html',
-        template_object_name = 'item',
-        extra_context = {'category': category},
-        paginate_by = 12,
-        page = page
+        queryset=Item.objects.filter(category=category, archived=False),
+        template_name='geartracker/items_by_category.html',
+        template_object_name='item',
+        extra_context={'category': category},
+        paginate_by=12,
+        page=page
     )
+
 
 def items_by_type(request, cat_slug, type_slug, page=1):
 
@@ -78,13 +84,14 @@ def items_by_type(request, cat_slug, type_slug, page=1):
     # Use the generic object_list view to return the list of items
     return list_detail.object_list(
         request,
-        queryset = Item.objects.filter(type=type, archived=False),
-        template_name = 'geartracker/items_by_type.html',
-        template_object_name = 'item',
-        extra_context = {'type': type, 'category': category},
-        paginate_by = 12,
-        page = page
+        queryset=Item.objects.filter(type=type, archived=False),
+        template_name='geartracker/items_by_type.html',
+        template_object_name='item',
+        extra_context={'type': type, 'category': category},
+        paginate_by=12,
+        page=page
     )
+
 
 def items_by_tag(request, slug, page=1):
 
@@ -94,13 +101,14 @@ def items_by_tag(request, slug, page=1):
     # Use the generic object_list view to return the list of items
     return list_detail.object_list(
         request,
-        queryset = Item.objects.filter(tags=tag, archived=False),
-        template_name = 'geartracker/items_by_tag.html',
-        template_object_name = 'item',
-        extra_context = {'tag': tag},
-        paginate_by = 12,
-        page = page
+        queryset=Item.objects.filter(tags=tag, archived=False),
+        template_name='geartracker/items_by_tag.html',
+        template_object_name='item',
+        extra_context={'tag': tag},
+        paginate_by=12,
+        page=page
     )
+
 
 def categories_view(request, match):
 
@@ -108,15 +116,16 @@ def categories_view(request, match):
     categories = Category.objects.all()
 
     # For each category, get all related types
-    category_list= []
+    category_list = []
     for category in categories:
         category_list.append({'category': category,
-            'types': Type.objects.filter(category=category)})
+                             'types': Type.objects.filter(category=category)})
 
     # Return the dictionary of categories and types to the template
     return render_to_response('geartracker/category_list.html',
-        {'categories': category_list},
-        context_instance=RequestContext(request))
+                              {'categories': category_list},
+                              context_instance=RequestContext(request))
+
 
 def index(request):
 
@@ -127,5 +136,6 @@ def index(request):
     lists = List.objects.filter(public=True)
 
     return render_to_response('geartracker/index.html',
-        {'item_list': items[:6], 'list_list': lists[:6]},
-        context_instance=RequestContext(request))
+                              {'item_list': items[:6],
+                               'list_list': lists[:6]},
+                              context_instance=RequestContext(request))

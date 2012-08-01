@@ -2,6 +2,7 @@ from django.db import models
 from geartracker.mass import metric, imperial
 from sorl.thumbnail import ImageField
 
+
 class Category(models.Model):
     """ Model representing a category """
     name = models.CharField(max_length=100)
@@ -10,13 +11,14 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "categories"
         ordering = ('name',)
-    
+
     @property
     def number_items(self):
         return len(self.item_set.all())
 
     def __unicode__(self):
         return self.name
+
 
 class Type(models.Model):
     """ Model representing a type """
@@ -26,18 +28,18 @@ class Type(models.Model):
 
     class Meta:
         ordering = ('category', 'name',)
-    
+
     @property
     def number_items(self):
         return len(self.item_set.all())
-    
+
     @property
     def separator(self):
         return '::'
-    
+
     def __unicode__(self):
-        #return self.name
         return u'%s %s %s' % (self.category, self.separator, self.name)
+
 
 class Tag(models.Model):
     """ Model representing a tag """
@@ -45,7 +47,7 @@ class Tag(models.Model):
 
     class Meta:
         ordering = ('slug',)
-    
+
     @property
     def number_items(self):
         return len(self.item_set.all())
@@ -53,41 +55,41 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.slug
 
+
 class Item(models.Model):
     """ Model representing an item """
     make = models.CharField(max_length=100,
-        help_text="Required. The make (or brand) of the item.")
+                            help_text="The make (or brand) of the item.")
     model = models.CharField(max_length=100,
-        help_text="Required. The model of the item.")
+                             help_text="The model of the item.")
     slug = models.SlugField(unique=True,
-        help_text="Required. The slug is used to build the item's URL.")
+                            help_text="The item's unique slug.")
     weight = models.PositiveIntegerField(verbose_name="Weight (grams)",
-        help_text="Required. Weight in grams only. Do not include units.")
-    acquired = models.DateField(
-        help_text="Required. The date on which this item was acquired.")
-    type = models.ForeignKey(Type,
-        help_text="Required. The item's type specifies how it is organized.")
+                                         help_text="Weight in grams only. \
+                                                    Do not include units.")
+    acquired = models.DateField(help_text="The date on which this item was acquired.")
+    type = models.ForeignKey(Type, help_text="The type of the item.")
     size = models.CharField(max_length=30, blank=True,
-        help_text="An optional size for the item.")
+                            help_text="The size of the item.")
     link = models.URLField(blank=True, null=True,
-        help_text="An optional link to the manufacturer's page for the item.")
+                           help_text="A URL to the manufacturer's page for the item.")
     review_url = models.URLField(blank=True, null=True,
-        help_text="An optional link to a review of the item.")
-    notes = models.TextField(blank=True,
-        help_text="Any optional notes on the item.")
+                                 help_text="A URL to a review of the item.")
+    notes = models.TextField(blank=True, help_text="Any notes on the item.")
     image = models.ImageField(upload_to='geartracker/images/gear/', blank=True,
-        help_text="An optional image of the item.")
+                              help_text="An image of the item.")
     category = models.ForeignKey(Category, editable=False)
     tags = models.ManyToManyField(Tag, blank=True,
-        help_text="Any optional tags for the item.")
+                                  help_text="Any optional tags for the item.")
     related = models.ManyToManyField("self", blank=True,
-        help_text="Any items that are related to this item. Optional.")
+                                     help_text="Any items that are related to \
+                                                this item.")
     archived = models.BooleanField(default=False,
-        help_text="Archive this item.")
-    
+                                   help_text="Archive this item.")
+
     class Meta:
         ordering = ('make', 'model')
-    
+
     def __unicode__(self):
         if self.size:
             return u'%s %s (%s)' % (self.make, self.model, self.size)
@@ -116,6 +118,7 @@ class Item(models.Model):
         # Call the real save.
         super(Item, self).save(*args, **kwargs)
 
+
 class ListItem(models.Model):
     """ Model representing an item in a gear list """
     CARRY_CHOICES = (
@@ -126,7 +129,7 @@ class ListItem(models.Model):
     list = models.ForeignKey('List')
     quantity = models.PositiveIntegerField(default=1)
     type = models.CharField(max_length=6, choices=CARRY_CHOICES)
-    
+
     def __unicode__(self):
         return u'%s (%sx)' % (self.item, self.quantity)
 
@@ -137,10 +140,11 @@ class ListItem(models.Model):
     @property
     def total_metric_weight(self):
         return metric(self.quantity * self.item.weight)
-    
+
     @property
     def total_imperial_weight(self):
         return imperial(self.quantity * self.item.weight)
+
 
 class List(models.Model):
     """ Model representing a gear list """
@@ -149,13 +153,15 @@ class List(models.Model):
     location = models.CharField(max_length=200, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    trip_report = models.URLField(blank=True, null=True, help_text="An option URL to a trip report.")
-    public = models.BooleanField(default=True, help_text="Should this list be publicly viewable?")
+    trip_report = models.URLField(blank=True, null=True,
+                                  help_text="A URL to a trip report.")
+    public = models.BooleanField(default=True,
+                                 help_text="Make this list publicly viewable.")
     items = models.ManyToManyField(Item, through=ListItem)
 
     class Meta:
         ordering = ('-start_date', 'end_date')
-    
+
     def __unicode__(self):
         return self.name
 
@@ -167,7 +173,8 @@ class List(models.Model):
         from django.core.exceptions import ValidationError
         # Trip end date must be greater than start date
         if self.end_date < self.start_date:
-            raise ValidationError('End date must be greater than or equal to start date.')
+            raise ValidationError("The end date must be greater than or equal \
+                                  to the start date.")
 
     def add_weight(self, items):
         total_weight = 0
