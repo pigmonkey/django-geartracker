@@ -58,34 +58,29 @@ class Tag(models.Model):
 
 class Item(models.Model):
     """ Model representing an item """
-    make = models.CharField(max_length=100,
-                            help_text="The make (or brand) of the item.")
-    model = models.CharField(max_length=100,
-                             help_text="The model of the item.")
-    slug = models.SlugField(unique=True,
-                            help_text="The item's unique slug.")
+    make = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
     weight = models.PositiveIntegerField(verbose_name="Weight (grams)",
                                          help_text="Weight in grams only. \
                                                     Do not include units.")
-    acquired = models.DateField(help_text="The date on which this item was acquired.")
-    type = models.ForeignKey(Type, help_text="The type of the item.")
-    size = models.CharField(max_length=30, blank=True,
-                            help_text="The size of the item.")
+    acquired = models.DateField(help_text="The date on which this item was \
+                                           acquired.")
+    type = models.ForeignKey(Type)
+    size = models.CharField(max_length=30, blank=True)
     link = models.URLField(blank=True, null=True,
-                           help_text="A URL to the manufacturer's page for the item.")
+                           help_text="A URL to the manufacturer's page for \
+                                      the item.")
     review_url = models.URLField(blank=True, null=True,
                                  help_text="A URL to a review of the item.")
     notes = models.TextField(blank=True, help_text="Any notes on the item.")
-    image = models.ImageField(upload_to='geartracker/images/gear/', blank=True,
-                              help_text="An image of the item.")
+    image = models.ImageField(upload_to='geartracker/images/gear/', blank=True)
     category = models.ForeignKey(Category, editable=False)
-    tags = models.ManyToManyField(Tag, blank=True,
-                                  help_text="Any optional tags for the item.")
-    related = models.ManyToManyField("self", blank=True,
-                                     help_text="Any items that are related to \
-                                                this item.")
+    tags = models.ManyToManyField(Tag, blank=True)
+    related = models.ManyToManyField("self", blank=True)
     archived = models.BooleanField(default=False,
-                                   help_text="Archive this item.")
+                                   help_text="Archived items are not publicly \
+                                              viewable.")
 
     class Meta:
         ordering = ('make', 'model')
@@ -155,8 +150,7 @@ class List(models.Model):
     end_date = models.DateField()
     trip_report = models.URLField(blank=True, null=True,
                                   help_text="A URL to a trip report.")
-    public = models.BooleanField(default=True,
-                                 help_text="Make this list publicly viewable.")
+    public = models.BooleanField(default=True)
     items = models.ManyToManyField(Item, through=ListItem)
 
     class Meta:
