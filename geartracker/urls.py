@@ -1,14 +1,7 @@
 from django.conf.urls.defaults import *
-from django.views.generic import TemplateView
 
 from geartracker.models import *
 from geartracker.views import *
-
-lists = {
-    'queryset': List.objects.filter(public=True),
-    'template_object_name': 'list',
-    'paginate_by': 12
-}
 
 urlpatterns = patterns('',
     url(r'^$',
