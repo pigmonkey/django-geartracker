@@ -36,7 +36,7 @@ urlpatterns = patterns('',
         name='geartracker_tag_detail'
     ),
     url(r'^tags/$',
-        view=TemplateView.as_view(template_name='geartracker/tag_list.html'),
+        view=TagListView.as_view(),
         name='geartracker_tag_list'
     ),
     url(r'^list/$',

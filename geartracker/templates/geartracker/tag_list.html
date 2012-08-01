@@ -1,12 +1,15 @@
 {% extends "geartracker/base_geartracker.html" %}
-{% block title %}Tag{{ tag_list|pluralize }}{% endblock %}
+{% load taggit_extras %}
+{% block title %}Tags{% endblock %}
 {% block entry %}
 
-<h1>Tag{{ tag_list|pluralize }}</h1>
+{% get_taglist as tags for 'geartracker.item' %}
+
+<h1>Tags</h1>
 
 <ul id="tags">
-    {% for tag in tag_list %}
-        <li><a href="{% url geartracker.views.items_by_tag slug=tag.slug %}" title="View all gear tagged with {{ tag }}">{{ tag }}</a> ({{ tag.number_items }})</li>
+    {% for tag in tags %}
+        <li><a href="{% url geartracker_tag_detail slug=tag.slug %}" title="View all gear tagged with {{ tag }}">{{ tag }}</a> ({{ tag.num_times }})</li>
     {% endfor %}
 </ul>
 {% endblock %}

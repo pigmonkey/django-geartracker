@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.views.generic import list_detail
 from django.http import Http404
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, TemplateView
 
 from taggit.models import Tag
 
@@ -55,6 +55,12 @@ class TypeDetailView(DetailView):
         # Add in a queryset of all items of the type.
         context['object_list'] = Item.objects.all().filter(type__slug=self.kwargs['type'])
         return context
+
+
+class TagListView(TemplateView):
+    """Display a list of tags."""
+    template_name = 'geartracker/tag_list.html'
+
 
 class TagDetailView(DetailView):
     """Display all items with a given tag."""
