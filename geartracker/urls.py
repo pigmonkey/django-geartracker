@@ -1,18 +1,15 @@
 from django.conf.urls.defaults import *
 from django.views.generic import list_detail
-from geartracker.models import Item, Category, Type, Tag, List
-from geartracker.views import index, items_by_category, items_by_type, items_by_tag, item_detail, gearlist_detail, categories_view
+from django.views.generic import TemplateView
+
+from geartracker.models import *
+from geartracker.views import *
 
 items = {
     'queryset': Item.objects.filter(archived=False),
     'template_object_name': 'item',
     'template_name': 'geartracker/all_items.html',
     'paginate_by': 12
-}
-
-tags = {
-    'queryset': Tag.objects.all(),
-    'template_object_name': 'tag',
 }
 
 lists = {
@@ -22,21 +19,35 @@ lists = {
 }
 
 urlpatterns = patterns('',
-    (r'^$', index),
+    url(r'^$',
+        view = index,
+        name = 'geartracker_home'
+    ),
+    url(r'^category/(?P<category>[-\w]+)/(?P<type>[-\w]+)/$',
+        view=TypeDetailView.as_view(),
+        name = 'geartracker_type_detail'
+    ),
+    url(r'^category/(?P<slug>[-\w]+)/$',
+        view=CategoryDetailView.as_view(),
+        name='geartracker_category_detail'
+    ),
+    url(r'^category/$',
+        view=CategoryListView.as_view(),
+        name='geartracker_category_list'
+    ),
     (r'^all/$', list_detail.object_list, items, "items_view"),
     (r'^all/page/(?P<page>[0-9]+)/$',
         list_detail.object_list,
         items,
         "items_paginated"),
-    (r'^categor(y|ies)/$', categories_view),
-    (r'^category/(?P<slug>[-\w]+)/$', items_by_category),
-    (r'^category/(?P<slug>[-\w]+)/page/(?P<page>[0-9]+)/$', items_by_category),
-    (r'^category/(?P<cat_slug>[-\w]+)/(?P<type_slug>[-\w]+)/$', items_by_type),
-    (r'^category/(?P<cat_slug>[-\w]+)/(?P<type_slug>[-\w]+)/page/(?P<page>[0-9]+)/$',
-        items_by_type),
-    (r'^tags?/$', list_detail.object_list, tags, "tags_view"),
-    (r'^tags?/(?P<slug>[-\w]+)/$', items_by_tag),
-    (r'^tags?/(?P<slug>[-\w]+)/page/(?P<page>[0-9]+)/$', items_by_tag),
+    url(r'^tags/(?P<slug>[-\w]+)/$',
+        view=TagDetailView.as_view(),
+        name='geartracker_tag_detail'
+    ),
+    url(r'^tags/$',
+        view=TemplateView.as_view(template_name='geartracker/tag_list.html'),
+        name='geartracker_tag_list'
+    ),
     (r'^lists?/$', list_detail.object_list, lists, "lists_view"),
     (r'^lists?/page/(?P<page>[0-9]+)/$',
         list_detail.object_list,
