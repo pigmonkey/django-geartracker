@@ -39,12 +39,14 @@ urlpatterns = patterns('',
         view=TemplateView.as_view(template_name='geartracker/tag_list.html'),
         name='geartracker_tag_list'
     ),
-    (r'^lists?/$', list_detail.object_list, lists, "lists_view"),
-    (r'^lists?/page/(?P<page>[0-9]+)/$',
-        list_detail.object_list,
-        lists,
-        "lists_paginated"),
-    (r'^lists?/(?P<slug>[-\w]+)/$', gearlist_detail),
+    url(r'^list/$',
+        view=ListListView.as_view(),
+        name='geartracker_list_list'
+    ),
+    url(r'^list/(?P<slug>[-\w]+)/$',
+        view=ListDetailView.as_view(),
+        name='geartracker_list_detail'
+    ),
     url(r'^(?P<slug>[-\w]+)/$',
         view=ItemDetailView.as_view(),
         name='geartracker_item_detail'

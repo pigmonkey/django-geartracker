@@ -2,7 +2,7 @@
 <ul id="lists">
     {% for list in list_list %}
         <li>
-            <h2><a href="{% url geartracker.views.gearlist_detail list.slug %}" rel="bookmark" title="Link to {{ list }}">{{ list }}</a></h2>
+            <h2><a href="{% url geartracker_list_detail list.slug %}" rel="bookmark" title="Link to {{ list }}">{{ list }}</a></h2>
             <dl class="list-brief">
                 <dt>Date{% if list.start_date != list.end_date %}s{% endif %}</dt>
                     <dd>{% spaceless %}

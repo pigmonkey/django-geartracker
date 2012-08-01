@@ -69,6 +69,49 @@ class TagDetailView(DetailView):
         return context
 
 
+class ListListView(ListView):
+    """Display a list of gear lists."""
+    model = List
+
+
+class ListDetailView(DetailView):
+    """Display a single gear list."""
+    model = List
+
+    def get_object(self):
+        object = List.objects.get(slug=self.kwargs['slug'])
+        # Only return the list if it is public or the user has the proper
+        # permissions.
+        if self.request.user.has_perm('geartracker.add_list') or object.public:
+            return object
+        else:
+            return None
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context.
+        context = super(ListDetailView, self).get_context_data(**kwargs)
+        # Get all packed items and sort them by category, then type.
+        packed_items = ListItem.objects.filter(list=self.get_object(),
+                                               type='packed')
+        packed_items = sorted(packed_items,
+                              key=attrgetter('item.category.name',
+                                             'item.type.name'),
+                              reverse=False)
+        # Add the packed items to the context.
+        context['packed_items'] = packed_items
+
+        # Get all worn items and sort them by category, then type.
+        worn_items = ListItem.objects.filter(list=self.get_object(),
+                                             type='worn')
+        worn_items = sorted(worn_items,
+                            key=attrgetter('item.category.name',
+                                           'item.type.name'),
+                            reverse=False)
+        # Add the worn items to the context.
+        context['worn_items'] = worn_items
+        return context
+
+
 def index(request):
 
     # Get items
@@ -81,39 +124,3 @@ def index(request):
                               {'item_list': items[:6],
                                'list_list': lists[:6]},
                               context_instance=RequestContext(request))
-
-
-def gearlist_detail(request, slug):
-
-    # Look up item (and raise a 404 if it can't be found).
-    list = get_object_or_404(List, slug=slug)
-
-    # A list is only viewable if the user is authenticated or if the list is
-    # public. geartracker.add_list
-    if request.user.has_perm('geartracker.add_list') or list.public:
-        # Get all packed items and sort them by category, then type.
-        packed_items = ListItem.objects.filter(list=list, type='packed')
-        packed_items = sorted(packed_items,
-                              key=attrgetter('item.category.name',
-                                             'item.type.name'),
-                              reverse=False)
-
-        # Get all worn items and sort them by category, then type.
-        worn_items = ListItem.objects.filter(list=list, type='worn')
-        worn_items = sorted(worn_items,
-                            key=attrgetter('item.category.name',
-                                           'item.type.name'),
-                            reverse=False)
-
-        return list_detail.object_detail(
-            request,
-            queryset=List.objects.all(),
-            object_id=list.id,
-            template_name='geartracker/list_detail.html',
-            template_object_name='list',
-            extra_context={'packed_items': packed_items,
-                           'worn_items': worn_items}
-        )
-    # Anonymous users get a 404 when they try to view non-public lists
-    else:
-        raise Http404
