@@ -36,8 +36,3 @@ class ListAdmin(admin.ModelAdmin):
                     'public')
     list_filter = ('public',)
 admin.site.register(List, ListAdmin)
-
-
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'number_items')
-admin.site.register(Tag, TagAdmin)

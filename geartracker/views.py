@@ -1,9 +1,14 @@
+from operator import attrgetter, itemgetter
+
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.views.generic import list_detail
 from django.http import Http404
-from operator import attrgetter, itemgetter
-from geartracker.models import Item, Category, Type, Tag, List, ListItem
+from django.views.generic import DetailView
+
+from taggit.models import Tag
+
+from geartracker.models import *
 
 
 def item_detail(request, slug):
@@ -92,22 +97,17 @@ def items_by_type(request, cat_slug, type_slug, page=1):
         page=page
     )
 
+class TagDetailView(DetailView):
+    """Display all items with a given tag."""
+    model = Tag
+    template_name = 'geartracker/items_by_tag.html'
 
-def items_by_tag(request, slug, page=1):
-
-    # Look up type (and raise a 404 if it can't be found).
-    tag = get_object_or_404(Tag, slug=slug)
-
-    # Use the generic object_list view to return the list of items
-    return list_detail.object_list(
-        request,
-        queryset=Item.objects.filter(tags=tag, archived=False),
-        template_name='geartracker/items_by_tag.html',
-        template_object_name='item',
-        extra_context={'tag': tag},
-        paginate_by=12,
-        page=page
-    )
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context.
+        context = super(TagDetailView, self).get_context_data(**kwargs)
+        # Add in a queryset of all items with the given tag.
+        context['object_list'] = Item.objects.published().filter(tags__slug=self.kwargs['slug'])
+        return context
 
 
 def categories_view(request, match):

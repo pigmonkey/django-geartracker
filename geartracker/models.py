@@ -1,6 +1,9 @@
 from django.db import models
-from geartracker.mass import metric, imperial
+
+from taggit.managers import TaggableManager
 from sorl.thumbnail import ImageField
+
+from geartracker.mass import metric, imperial
 
 
 class Category(models.Model):
@@ -41,21 +44,6 @@ class Type(models.Model):
         return u'%s %s %s' % (self.category, self.separator, self.name)
 
 
-class Tag(models.Model):
-    """ Model representing a tag """
-    slug = models.SlugField(unique=True)
-
-    class Meta:
-        ordering = ('slug',)
-
-    @property
-    def number_items(self):
-        return len(self.item_set.all())
-
-    def __unicode__(self):
-        return self.slug
-
-
 class Item(models.Model):
     """ Model representing an item """
     make = models.CharField(max_length=100)
@@ -76,7 +64,7 @@ class Item(models.Model):
     notes = models.TextField(blank=True, help_text="Any notes on the item.")
     image = models.ImageField(upload_to='geartracker/images/gear/', blank=True)
     category = models.ForeignKey(Category, editable=False)
-    tags = models.ManyToManyField(Tag, blank=True)
+    tags = TaggableManager(blank=True)
     related = models.ManyToManyField("self", blank=True)
     archived = models.BooleanField(default=False,
                                    help_text="Archived items are not publicly \
