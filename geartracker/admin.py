@@ -5,9 +5,9 @@ from geartracker.models import *
 class ItemAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("make", "model", "size")}
     list_display = ('__unicode__', 'type', 'metric_weight', 'acquired')
-    list_filter = ('archived', 'category', 'type', 'make', 'tags')
+    list_filter = ('archived', 'category', 'type', 'make')
     search_fields = ('make', 'model')
-    filter_horizontal = ('related', 'tags')
+    filter_horizontal = ('related',)
 admin.site.register(Item, ItemAdmin)
 
 
