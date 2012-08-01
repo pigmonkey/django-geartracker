@@ -1,0 +1,4 @@
+recursive-include geartracker/templates *.html
+
+include LICENSE
+include README.md
