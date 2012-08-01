@@ -50,6 +50,7 @@ Requirements
 ------------
 
 * [sorl-thumbnail](http://thumbnail.sorl.net/) is used to generate thumbnails of images.
+* [Python Imaging Library](http://www.pythonware.com/products/pil/) is required for getting photo EXIF data.
 
 
 Feedback
