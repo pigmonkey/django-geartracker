@@ -2,7 +2,7 @@
 <ul id="items">
     {% for item in item_list %}
         <li>
-            <h2><a href="{% url geartracker.views.item_detail item.slug %}" rel="bookmark" title="Link to {{ item }}">{{ item }}</a></h2>
+            <h2><a href="{% url geartracker_item_detail item.slug %}" rel="bookmark" title="Link to {{ item }}">{{ item }}</a></h2>
             <dl class="item-brief">
                 <dt>Metric Weight</dt>
                     <dd>{{ item.metric_weight }}</dd>

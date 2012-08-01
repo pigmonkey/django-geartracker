@@ -1,16 +1,8 @@
 from django.conf.urls.defaults import *
-from django.views.generic import list_detail
 from django.views.generic import TemplateView
 
 from geartracker.models import *
 from geartracker.views import *
-
-items = {
-    'queryset': Item.objects.filter(archived=False),
-    'template_object_name': 'item',
-    'template_name': 'geartracker/all_items.html',
-    'paginate_by': 12
-}
 
 lists = {
     'queryset': List.objects.filter(public=True),
@@ -35,11 +27,10 @@ urlpatterns = patterns('',
         view=CategoryListView.as_view(),
         name='geartracker_category_list'
     ),
-    (r'^all/$', list_detail.object_list, items, "items_view"),
-    (r'^all/page/(?P<page>[0-9]+)/$',
-        list_detail.object_list,
-        items,
-        "items_paginated"),
+    url(r'^all/$',
+        view=ItemListView.as_view(),
+        name='geartracker_item_list'
+    ),
     url(r'^tags/(?P<slug>[-\w]+)/$',
         view=TagDetailView.as_view(),
         name='geartracker_tag_detail'
@@ -54,5 +45,8 @@ urlpatterns = patterns('',
         lists,
         "lists_paginated"),
     (r'^lists?/(?P<slug>[-\w]+)/$', gearlist_detail),
-    (r'^(?P<slug>[-\w]+)/$', item_detail),
+    url(r'^(?P<slug>[-\w]+)/$',
+        view=ItemDetailView.as_view(),
+        name='geartracker_item_detail'
+    ),
 )

@@ -11,18 +11,76 @@ from taggit.models import Tag
 from geartracker.models import *
 
 
-def item_detail(request, slug):
+class ItemDetailView(DetailView):
+    """Display a single item."""
+    model = Item
 
-    # Look up item (and raise a 404 if it can't be found).
-    item = get_object_or_404(Item, slug=slug)
 
-    return list_detail.object_detail(
-        request,
-        queryset=Item.objects.all(),
-        object_id=item.id,
-        template_name='geartracker/item_detail.html',
-        template_object_name='item',
-    )
+class ItemListView(ListView):
+    """Display a list of items."""
+    model = Item
+
+
+class CategoryListView(ListView):
+    """Display a list of categories."""
+    model = Category
+
+
+class CategoryDetailView(DetailView):
+    """Display all items in a given category."""
+    model = Category
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context.
+        context = super(CategoryDetailView, self).get_context_data(**kwargs)
+        # Add in a queryset of all items in the category.
+        context['object_list'] = Item.objects.all().filter(category__slug=self.kwargs['slug'])
+        return context
+
+
+class TypeDetailView(DetailView):
+    """Display all items of a given type."""
+    model = Type
+
+    def get_object(self):
+        # Get the requested type. Raise a 404 if it does not exist.
+        object = get_object_or_404(Type,
+                                   category__slug=self.kwargs['category'],
+                                   slug=self.kwargs['type'])
+        return object
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context.
+        context = super(TypeDetailView, self).get_context_data(**kwargs)
+        # Add in a queryset of all items of the type.
+        context['object_list'] = Item.objects.all().filter(type__slug=self.kwargs['type'])
+        return context
+
+class TagDetailView(DetailView):
+    """Display all items with a given tag."""
+    model = Tag
+    template_name = 'geartracker/items_by_tag.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context.
+        context = super(TagDetailView, self).get_context_data(**kwargs)
+        # Add in a queryset of all items with the given tag.
+        context['object_list'] = Item.objects.all().filter(tags__slug=self.kwargs['slug'])
+        return context
+
+
+def index(request):
+
+    # Get items
+    items = Item.objects.filter(archived=False).order_by('-acquired')
+
+    # Get lists
+    lists = List.objects.filter(public=True)
+
+    return render_to_response('geartracker/index.html',
+                              {'item_list': items[:6],
+                               'list_list': lists[:6]},
+                              context_instance=RequestContext(request))
 
 
 def gearlist_detail(request, slug):
@@ -59,85 +117,3 @@ def gearlist_detail(request, slug):
     # Anonymous users get a 404 when they try to view non-public lists
     else:
         raise Http404
-
-
-class CategoryListView(ListView):
-    """Display a list of categories."""
-    model = Category
-
-
-class CategoryDetailView(DetailView):
-    """Display all items in a given category."""
-    model = Category
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context.
-        context = super(CategoryDetailView, self).get_context_data(**kwargs)
-        # Add in a queryset of all items in the category.
-        context['object_list'] = Item.objects.all().filter(category__slug=self.kwargs['slug'])
-        return context
-
-
-class TypeDetailView(DetailView):
-    """Display all items of a given type."""
-    model = Type
-
-    def get_object(self):
-        # Get the requested type. Raise a 404 if it does not exist.
-        object = get_object_or_404(Type,
-                                   category__slug=self.kwargs['category'],
-                                   slug=self.kwargs['type'])
-        return object
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context.
-        context = super(CategoryDetailView, self).get_context_data(**kwargs)
-        # Add in a queryset of all items of the type.
-        context['object_list'] = Item.objects.all().filter(tag__slug=self.kwargs['slug'])
-        return context
-
-
-def items_by_type(request, cat_slug, type_slug, page=1):
-
-    # Look up type (and raise a 404 if it can't be found).
-    type = get_object_or_404(Type, slug=type_slug)
-
-    # Look up category (and raise a 404 if it can't be found).
-    category = get_object_or_404(Category, slug=cat_slug)
-
-    # Use the generic object_list view to return the list of items
-    return list_detail.object_list(
-        request,
-        queryset=Item.objects.filter(type=type, archived=False),
-        template_name='geartracker/items_by_type.html',
-        template_object_name='item',
-        extra_context={'type': type, 'category': category},
-        paginate_by=12,
-        page=page
-    )
-
-class TagDetailView(DetailView):
-    """Display all items with a given tag."""
-    model = Tag
-    template_name = 'geartracker/items_by_tag.html'
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context.
-        context = super(TagDetailView, self).get_context_data(**kwargs)
-        # Add in a queryset of all items with the given tag.
-        context['object_list'] = Item.objects.all().filter(tags__slug=self.kwargs['slug'])
-        return context
-
-
-def index(request):
-
-    # Get items
-    items = Item.objects.filter(archived=False).order_by('-acquired')
-
-    # Get lists
-    lists = List.objects.filter(public=True)
-
-    return render_to_response('geartracker/index.html',
-                              {'item_list': items[:6],
-                               'list_list': lists[:6]},
-                              context_instance=RequestContext(request))
