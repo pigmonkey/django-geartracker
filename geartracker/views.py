@@ -27,15 +27,26 @@ class CategoryListView(ListView):
     model = Category
 
 
-class CategoryDetailView(DetailView):
+class CategoryItemsView(ListView):
     """Display all items in a given category."""
-    model = Category
+    paginate_by = settings.GEARTRACKER_PAGINATE_BY
+
+    def category(self):
+        category = Category.objects.get(slug=self.kwargs['slug'])
+        return category
+
+    def get_queryset(self):
+        # Get the requested items.
+        queryset = Item.objects.filter(category=self.category)
+        return queryset
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context.
-        context = super(CategoryDetailView, self).get_context_data(**kwargs)
-        # Add in a queryset of all items in the category.
-        context['object_list'] = Item.objects.all().filter(category__slug=self.kwargs['slug'])
+        context = super(CategoryItemsView, self).get_context_data(**kwargs)
+        # Add the category object to the context.
+        context['category'] = self.category
+        # Set the page title to the category name.
+        context['title'] = self.category
         return context
 
 

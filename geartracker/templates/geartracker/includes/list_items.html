@@ -21,7 +21,7 @@
 {% if is_paginated %}
 <ul class="page-list">
     {% for page in paginator.page_range %}
-    <li {% if page = page_obj.number %}class="current"{% endif %}><a href="{% url geartracker_item_list %}?page={{ page }}" title="Page {{ page }}">{{ page }}</a></li>
+    <li {% if page = page_obj.number %}class="current"{% endif %}><a href="?page={{ page }}" title="Page {{ page }}">{{ page }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}

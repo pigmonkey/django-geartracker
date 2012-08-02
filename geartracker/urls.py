@@ -13,7 +13,7 @@ urlpatterns = patterns('',
         name = 'geartracker_type_detail'
     ),
     url(r'^category/(?P<slug>[-\w]+)/$',
-        view=CategoryDetailView.as_view(),
+        view=CategoryItemsView.as_view(),
         name='geartracker_category_detail'
     ),
     url(r'^category/$',
