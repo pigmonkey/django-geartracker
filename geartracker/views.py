@@ -84,16 +84,26 @@ class TagListView(TemplateView):
     template_name = 'geartracker/tag_list.html'
 
 
-class TagDetailView(DetailView):
+class TagItemsView(ListView):
     """Display all items with a given tag."""
-    model = Tag
-    template_name = 'geartracker/items_by_tag.html'
+    paginate_by = settings.GEARTRACKER_PAGINATE_BY
+
+    def tag(self):
+        tag = Tag.objects.get(slug=self.kwargs['slug'])
+        return tag
+
+    def get_queryset(self):
+        # Get the requested items.
+        queryset = Item.objects.filter(tags=self.tag)
+        return queryset
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context.
-        context = super(TagDetailView, self).get_context_data(**kwargs)
-        # Add in a queryset of all items with the given tag.
-        context['object_list'] = Item.objects.all().filter(tags__slug=self.kwargs['slug'])
+        context = super(TagItemsView, self).get_context_data(**kwargs)
+        # Add the tag object to the context.
+        context['tag'] = self.tag
+        # Set the page title to the tag name.
+        context['title'] = self.tag
         return context
 
 

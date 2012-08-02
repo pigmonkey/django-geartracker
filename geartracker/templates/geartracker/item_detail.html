@@ -55,7 +55,7 @@
         <h2>Tags</h2>
         <ul>
             {% for tag in item.tags.all %}
-            <li><a href="{% url geartracker_tag_detail slug=tag.slug %}" rel="tag" title="View all gear tagged with {{ tag }}">{{ tag }}</a></li>
+            <li><a href="{% url geartracker_tag_items slug=tag.slug %}" rel="tag" title="View all gear tagged with {{ tag }}">{{ tag }}</a></li>
             {% endfor %}
         </ul>
     </li>

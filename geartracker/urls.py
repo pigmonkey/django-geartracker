@@ -25,8 +25,8 @@ urlpatterns = patterns('',
         name='geartracker_item_list'
     ),
     url(r'^tags/(?P<slug>[-\w]+)/$',
-        view=TagDetailView.as_view(),
-        name='geartracker_tag_detail'
+        view=TagItemsView.as_view(),
+        name='geartracker_tag_items'
     ),
     url(r'^tags/$',
         view=TagListView.as_view(),
