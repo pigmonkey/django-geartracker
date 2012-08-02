@@ -1,8 +1,7 @@
 from operator import attrgetter, itemgetter
 
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import Http404
 from django.views.generic import DetailView, ListView, TemplateView
 
 from taggit.models import Tag
@@ -50,22 +49,33 @@ class CategoryItemsView(ListView):
         return context
 
 
-class TypeDetailView(DetailView):
+class TypeItemsView(ListView):
     """Display all items of a given type."""
-    model = Type
+    paginate_by = settings.GEARTRACKER_PAGINATE_BY
 
-    def get_object(self):
-        # Get the requested type. Raise a 404 if it does not exist.
-        object = get_object_or_404(Type,
-                                   category__slug=self.kwargs['category'],
-                                   slug=self.kwargs['type'])
-        return object
+    def category(self):
+        category = Category.objects.get(slug=self.kwargs['category'])
+        return category
+
+    def type(self):
+        type = Type.objects.get(category=self.category,
+                                slug=self.kwargs['type'])
+        return type
+
+    def get_queryset(self):
+        # Get the requested items.
+        queryset = Item.objects.filter(type=self.type)
+        return queryset
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context.
-        context = super(TypeDetailView, self).get_context_data(**kwargs)
-        # Add in a queryset of all items of the type.
-        context['object_list'] = Item.objects.all().filter(type__slug=self.kwargs['type'])
+        context = super(TypeItemsView, self).get_context_data(**kwargs)
+        # Add the category object to the context.
+        context['category'] = self.category
+        # Add the type object to the context.
+        context['type'] = self.type
+        # Set the page title to the type name.
+        context['title'] = self.type
         return context
 
 

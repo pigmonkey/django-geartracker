@@ -9,8 +9,8 @@ urlpatterns = patterns('',
         name = 'geartracker_home'
     ),
     url(r'^category/(?P<category>[-\w]+)/(?P<type>[-\w]+)/$',
-        view=TypeDetailView.as_view(),
-        name = 'geartracker_type_detail'
+        view=TypeItemsView.as_view(),
+        name = 'geartracker_type_items'
     ),
     url(r'^category/(?P<slug>[-\w]+)/$',
         view=CategoryItemsView.as_view(),
