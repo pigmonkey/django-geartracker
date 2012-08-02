@@ -1,5 +1,7 @@
 from operator import attrgetter, itemgetter
 
+from django.http import Http404
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import DetailView, ListView, TemplateView
@@ -31,7 +33,10 @@ class CategoryItemsView(ListView):
     paginate_by = settings.GEARTRACKER_PAGINATE_BY
 
     def category(self):
-        category = Category.objects.get(slug=self.kwargs['slug'])
+        try:
+            category = Category.objects.get(slug=self.kwargs['slug'])
+        except ObjectDoesNotExist:
+            raise Http404
         return category
 
     def get_queryset(self):
@@ -54,12 +59,18 @@ class TypeItemsView(ListView):
     paginate_by = settings.GEARTRACKER_PAGINATE_BY
 
     def category(self):
-        category = Category.objects.get(slug=self.kwargs['category'])
+        try:
+            category = Category.objects.get(slug=self.kwargs['category'])
+        except ObjectDoesNotExist:
+            raise Http404
         return category
 
     def type(self):
-        type = Type.objects.get(category=self.category,
-                                slug=self.kwargs['type'])
+        try:
+            type = Type.objects.get(category=self.category,
+                                    slug=self.kwargs['type'])
+        except ObjectDoesNotExist:
+            raise Http404
         return type
 
     def get_queryset(self):
@@ -89,7 +100,10 @@ class TagItemsView(ListView):
     paginate_by = settings.GEARTRACKER_PAGINATE_BY
 
     def tag(self):
-        tag = Tag.objects.get(slug=self.kwargs['slug'])
+        try:
+            tag = Tag.objects.get(slug=self.kwargs['slug'])
+        except ObjectDoesNotExist:
+            raise Http404
         return tag
 
     def get_queryset(self):
@@ -118,13 +132,17 @@ class ListDetailView(DetailView):
     model = List
 
     def get_object(self):
-        object = List.objects.get(slug=self.kwargs['slug'])
-        # Only return the list if it is public or the user has the proper
+        try:
+            object = List.objects.get(slug=self.kwargs['slug'])
+        except ObjectDoesNotExist:
+            raise Http404
+        # Raise a 404 if the list is not public and the user does not have
         # permissions.
-        if self.request.user.has_perm('geartracker.add_list') or object.public:
-            return object
-        else:
-            return None
+        if (not object.public and
+                self.request.user.has_perm('geartracker.add_list')):
+            raise Http404
+
+        return object
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context.
