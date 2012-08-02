@@ -8,6 +8,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from taggit.models import Tag
 
 from geartracker.models import *
+from geartracker import settings
 
 
 class ItemDetailView(DetailView):
@@ -18,6 +19,7 @@ class ItemDetailView(DetailView):
 class ItemListView(ListView):
     """Display a list of items."""
     model = Item
+    paginate_by = settings.GEARTRACKER_PAGINATE_BY
 
 
 class CategoryListView(ListView):
@@ -77,6 +79,7 @@ class TagDetailView(DetailView):
 class ListListView(ListView):
     """Display a list of gear lists."""
     model = List
+    paginate_by = settings.GEARTRACKER_PAGINATE_BY
 
 
 class ListDetailView(DetailView):

@@ -5,4 +5,12 @@
 <h1>Gear Lists</h1>
 
 {% include "geartracker/includes/list_lists.html" %}
+
+{% if is_paginated %}
+<ul class="page-list">
+    {% for page in paginator.page_range %}
+    <li {% if page = page_obj.number %}class="current"{% endif %}><a href="{% url geartracker_item_list %}?page={{ page }}" title="Page {{ page }}">{{ page }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

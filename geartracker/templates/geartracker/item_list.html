@@ -8,8 +8,8 @@
 
 {% if is_paginated %}
 <ul class="page-list">
-    {% for pages in page_range %}
-    <li {% if page = pages %}class="current"{% endif %}><a href="{% url items_paginated page=pages %}" title="Page {{ pages }}">{{ pages }}</a></li>
+    {% for page in paginator.page_range %}
+    <li {% if page = page_obj.number %}class="current"{% endif %}><a href="{% url geartracker_item_list %}?page={{ page }}" title="Page {{ page }}">{{ page }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
