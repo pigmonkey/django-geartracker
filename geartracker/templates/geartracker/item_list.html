@@ -1,16 +1,9 @@
 {% extends "geartracker/base_geartracker.html" %}
-{% block title %}All Gear{% if is_paginated %} | Page {{ page }}{% endif %}{% endblock %}
+{% block title %}All Gear{% if is_paginated %} | Page {{ page_obj.number }}{% endif %}{% endblock %}
 {% block entry %}
 
 <h1>All Gear</h1>
 
 {% include "geartracker/includes/list_items.html" %}
 
-{% if is_paginated %}
-<ul class="page-list">
-    {% for page in paginator.page_range %}
-    <li {% if page = page_obj.number %}class="current"{% endif %}><a href="{% url geartracker_item_list %}?page={{ page }}" title="Page {{ page }}">{{ page }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
 {% endblock %}
