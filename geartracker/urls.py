@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     ),
     url(r'^category/(?P<slug>[-\w]+)/$',
         view=CategoryItemsView.as_view(),
-        name='geartracker_category_detail'
+        name='geartracker_category_items'
     ),
     url(r'^category/$',
         view=CategoryListView.as_view(),

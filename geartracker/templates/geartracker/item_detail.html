@@ -9,7 +9,7 @@
 {% endif %}
 
 <ul id="breadcrumb">
-    <li><a href="{% url geartracker_category_detail slug=item.category.slug  %}" title="View all gear in {{ item.category }}">{{ item.category|capfirst }}</a> {{ item.type.separator }}</li>
+    <li><a href="{% url geartracker_category_items slug=item.category.slug  %}" title="View all gear in {{ item.category }}">{{ item.category|capfirst }}</a> {{ item.type.separator }}</li>
     <li><a href="{% url geartracker_type_detail category=item.category.slug type=item.type.slug %}" title="View all gear in {{ item.type.name }}">{{ item.type.name|capfirst }}</a></li>
 </ul>
 

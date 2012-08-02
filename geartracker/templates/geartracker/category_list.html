@@ -6,7 +6,7 @@
 
 <ul id="categories">
 {% for category in category_list %}
-    <li><a href="{% url geartracker_category_detail slug=category.slug %}" title="View all gear in {{ category }}">{{ category|capfirst }}</a>
+    <li><a href="{% url geartracker_category_items slug=category.slug %}" title="View all gear in {{ category }}">{{ category|capfirst }}</a>
         {% if category.type_set.all %}
         <ul>
             {% for type in category.type_set.all %}
