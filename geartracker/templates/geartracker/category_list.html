@@ -5,12 +5,12 @@
 <h1>Categories</h1>
 
 <ul id="categories">
-{% for category in categories %}
-    <li><a href="{% url geartracker.views.items_by_category slug=category.category.slug %}" title="View all gear in {{ category.category }}">{{ category.category|capfirst }}</a>
-        {% if category.types %}
+{% for category in category_list %}
+    <li><a href="{% url geartracker_category_detail slug=category.slug %}" title="View all gear in {{ category }}">{{ category|capfirst }}</a>
+        {% if category.type_set.all %}
         <ul>
-            {% for type in category.types %}
-            <li><a href="{% url geartracker.views.items_by_type cat_slug=type.category.slug type_slug=type.slug %}" title="View all gear in {{ type.name }}">{{ type.name|capfirst }}</a></li>
+            {% for type in category.type_set.all %}
+            <li><a href="{% url geartracker_type_detail category=category.slug type=type.slug %}" title="View all gear in {{ type.name }}">{{ type.name|capfirst }}</a></li>
             {% endfor %}
         </ul>
         {% endif %}
