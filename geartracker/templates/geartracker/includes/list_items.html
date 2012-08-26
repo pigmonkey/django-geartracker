@@ -1,15 +1,15 @@
 {% if item_list %}
-<ul id="items">
+<ul class="item-list">
     {% for item in item_list %}
-        <li>
-            <h2><a href="{% url geartracker_item_detail item.slug %}" rel="bookmark" title="Link to {{ item }}">{{ item }}</a></h2>
+        <li class="item">
+            <h2 class="item-title"><a href="{% url geartracker_item_detail item.slug %}" rel="bookmark" title="Link to {{ item }}">{{ item }}</a></h2>
             <dl class="item-brief">
-                <dt>Metric Weight</dt>
-                    <dd>{{ item.metric_weight }}</dd>
-                <dt>Imperial Weight</dt>
-                    <dd>{{ item.imperial_weight }}</dd>
-                <dt>Acquired</dt>
-                    <dd>{{ item.acquired }}</dd>
+                <dt class="item-weight-metric">Metric Weight</dt>
+                    <dd class="item-weight-metric">{{ item.metric_weight }}</dd>
+                <dt class="item-weight-imperial">Imperial Weight</dt>
+                    <dd class="item-weight-imperial">{{ item.imperial_weight }}</dd>
+                <dt class="item-acquired">Acquired</dt>
+                    <dd class="item-acquired">{{ item.acquired }}</dd>
             </dl>
         </li>
     {% endfor %}

@@ -1,17 +1,19 @@
 {% extends "geartracker/base_geartracker.html" %}
-{% block entry %}
 
-<div id="home-gear">
-    <h1>Recent Gear</h1>
+{% block body_id %}geartracker-home{% endblock %}
 
-    {% include "geartracker/includes/list_items.html" %}
-</div>
+{% block content %}
+    {% if item_list %}
+    <div class="recent-gear">
+        <h1>Recent Gear</h1>
+        {% include "geartracker/includes/list_items.html" %}
+    </div>
+    {% endif %}
 
-{% if list_list %}
-<div id="home-lists">
-    <h1>Recent Gear Lists</h1>
-
-    {% include "geartracker/includes/list_lists.html" %}
-</div>
-{% endif %}
+    {% if list_list %}
+    <div class="recent-list">
+        <h1>Recent Gear Lists</h1>
+        {% include "geartracker/includes/list_lists.html" %}
+    </div>
+    {% endif %}
 {% endblock %}

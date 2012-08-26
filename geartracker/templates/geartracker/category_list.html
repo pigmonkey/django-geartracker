@@ -1,20 +1,22 @@
 {% extends "geartracker/base_geartracker.html" %}
+
 {% block title %}Categories{% endblock %}
-{% block entry %}
+{% block body_id %}geartracker-list-list{% endblock %}
 
-<h1>Categories</h1>
+{% block content %}
+    <h1>Categories</h1>
 
-<ul id="categories">
-{% for category in category_list %}
-    <li><a href="{% url geartracker_category_items slug=category.slug %}" title="View all gear in {{ category }}">{{ category|capfirst }}</a>
-        {% if category.type_set.all %}
-        <ul>
-            {% for type in category.type_set.all %}
-            <li><a href="{% url geartracker_type_items category=category.slug type=type.slug %}" title="View all gear in {{ type.name }}">{{ type.name|capfirst }}</a></li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </li>
-{% endfor %}
-</ul>
+    <ul class="categories">
+    {% for category in category_list %}
+        <li><a href="{% url geartracker_category_items slug=category.slug %}" title="View all gear in {{ category }}">{{ category|capfirst }}</a>
+            {% if category.type_set.all %}
+            <ul>
+                {% for type in category.type_set.all %}
+                <li><a href="{% url geartracker_type_items category=category.slug type=type.slug %}" title="View all gear in {{ type.name }}">{{ type.name|capfirst }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
 {% endblock %}

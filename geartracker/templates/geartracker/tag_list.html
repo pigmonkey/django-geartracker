@@ -1,15 +1,21 @@
 {% extends "geartracker/base_geartracker.html" %}
+
 {% load taggit_extras %}
+
 {% block title %}Tags{% endblock %}
-{% block entry %}
+{% block body_id %}geartracker-tag-list{% endblock %}
 
-{% get_taglist as tags for 'geartracker.item' %}
+{% block content %}
+    <h1>Tags</h1>
 
-<h1>Tags</h1>
-
-<ul id="tags">
-    {% for tag in tags %}
-        <li><a href="{% url geartracker_tag_items slug=tag.slug %}" title="View all gear tagged with {{ tag }}">{{ tag }}</a> ({{ tag.num_times }})</li>
-    {% endfor %}
-</ul>
+    {% get_taglist as tags for 'geartracker.item' %}
+    {% if tags %}
+    <ul class="tags">
+        {% for tag in tags %}
+            <li><a href="{% url geartracker_tag_items slug=tag.slug %}" title="View all gear tagged with {{ tag }}">{{ tag }}</a> ({{ tag.num_times }})</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No tags available!</p>
+    {% endif %}
 {% endblock %}

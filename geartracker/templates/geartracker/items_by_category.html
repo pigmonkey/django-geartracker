@@ -1,16 +1,18 @@
 {% extends "geartracker/base_geartracker.html" %}
+
 {% block title %}{{ category|capfirst }}{% if is_paginated %} | Page {{ page }}{% endif %}{% endblock %}
-{% block entry %}
+{% block body_id %}geartracker-category-list{% endblock %}
 
-<h1>{{ category|capfirst }}</h1>
+{% block content %}
+    <h1>{{ category|capfirst }}</h1>
 
-{% include "geartracker/items_list.html" %}
+    {% include "geartracker/items_list.html" %}
 
-{% if is_paginated %}
-<ul class="page-list">
-    {% for pages in page_range %}
-    <li {% if page = pages %}class="current"{% endif %}><a href="{% url geartracker.views.items_by_category slug=category.slug page=pages %}" title="Page {{ pages }}">{{ pages }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
+    {% if is_paginated %}
+    <ul class="page-list">
+        {% for pages in page_range %}
+        <li {% if page = pages %}class="current"{% endif %}><a href="{% url geartracker.views.items_by_category slug=category.slug page=pages %}" title="Page {{ pages }}">{{ pages }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 {% endblock %}

@@ -1,0 +1,36 @@
+<table class="gear-list">
+<thead>
+    <tr>
+        <th class="category">Category</th>
+        <th class="type">Type</th>
+        <th class="item">Item</th>
+        <th class="weight">Weight</th>
+        <th class="quantity">Quantity</th>
+        <th class="total-weight">Total Weight</th>
+    </tr>
+</thead>
+<tbody>
+    {% for item in list %}
+    <tr{% if item.item.archived%} class="archived"{% endif %}>
+        <td class="category">{{ item.item.category|capfirst }}</td>
+        <td class="type">{{ item.item.type.name|capfirst }}</td>
+        <td class="item">
+            {% if item.item.archived %}
+            {{ item.item }}
+            {% else %}
+            <a href="{% url geartracker_item_detail slug=item.item.slug %}" rel="bookmark" title="Link to {{ item.item }}">{{ item.item }}</a>
+            {% endif %}
+        </td>
+        <td class="weight">{{ item.item.metric_weight }}</td>
+        <td class="quantity">{{ item.quantity }}</td>
+        <td class="total-weight">{{ item.total_metric_weight }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+<tfoot>
+    <tr>
+        <th>Total weight:</th>
+        <td>{{ metric_weight }} ({{ imperial_weight }})</td>
+    </tr>
+</tfoot>
+</table>

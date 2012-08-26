@@ -1,8 +1,9 @@
 {% extends "geartracker/base_geartracker.html" %}
+
 {% block title %}Gear Lists{% if is_paginated %} | Page {{ page_obj.number }}{% endif %}{% endblock %}
-{% block entry %}
+{% block body_id %}geartracker-list-list{% endblock %}
 
-<h1>Gear Lists</h1>
-
-{% include "geartracker/includes/list_lists.html" %}
+{% block content %}
+    <h1>Gear Lists</h1>
+    {% include "geartracker/includes/list_lists.html" %}
 {% endblock %}

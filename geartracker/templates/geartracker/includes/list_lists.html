@@ -1,19 +1,19 @@
 {% if list_list %}
-<ul id="lists">
+<ul clas="list-list">
     {% for list in list_list %}
-        <li>
-            <h2><a href="{% url geartracker_list_detail list.slug %}" rel="bookmark" title="Link to {{ list }}">{{ list }}</a></h2>
+        <li class="list">
+            <h2 class="list-title"><a href="{% url geartracker_list_detail list.slug %}" rel="bookmark" title="Link to {{ list }}">{{ list }}</a></h2>
             <dl class="list-brief">
-                <dt>Date{% if list.start_date != list.end_date %}s{% endif %}</dt>
-                    <dd>{% spaceless %}
+                <dt class="list-date">Date{% if list.start_date != list.end_date %}s{% endif %}</dt>
+                    <dd class="list-date">{% spaceless %}
                     {% if list.start_date = list.end_date %}
                     {{ list.start_date }}
                     {% else %}
                     {{ list.start_date }} &#8211; {{ list.end_date }}
                     {% endif %}
                     {% endspaceless %}</dd>
-                <dt>Total Weight</dt>
-                    <dd>{{ list.total_metric_weight }} ({{ list.total_imperial_weight }})</dd>
+                <dt class="list-weight">Total Weight</dt>
+                    <dd class="list-weight"><span class="list-weight-metric">{{ list.total_metric_weight }}</span> <span class="list-weight-imperial">{{ list.total_imperial_weight }}</span></dd>
             </dl>
         </li>
     {% endfor %}

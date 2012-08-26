@@ -1,108 +1,59 @@
 {% extends "geartracker/base_geartracker.html" %}
+
 {% block title %}{{ list }}: Gear List{% endblock %}
-{% block entry %}
+{% block body_class %}geartracker-list{% endblock %}
+{% block body_id %}geartacker-list-{{ list.id }}{% endblock %}
 
-<h1>{{ list }}</h1>
+{% block content %}
+    <h1>{{ list }}</h1>
 
-{% if perms.geartracker.change_item %}
-<a title="Edit {{ item }}" id="edit" href="{% url admin:geartracker_list_change list.id %}">Edit</a>
-{% endif %}
-
-<p id="trip-date">
-{% spaceless %}
-{% if list.start_date = list.end_date %}
-{{ list.start_date }}
-{% else %}
-{{ list.start_date }} &#8211; {{ list.end_date }}
-{% endif %}
-{% endspaceless %}
-</p>
-
-{% if list.location or list.trip_report %}
-<dl>
-    {% if list.location %}
-    <dt>Location:</dt>
-        <dd>{{ list.location|safe }}</dd>
-    {% endif %}
-    {% if list.trip_report %}
-    <dt>Report:</dt>
-        <dd><a href="{{ list.trip_report }}" title="Read the trip report">Trip Report</a></dd>
-    {% endif %}
-</dl>
-{% endif %}
-
-<div id="list-details">
-    {% if worn_items %}
-    <h2>Worn Items</h2>
-
-    <table class="gear-list">
-    <tr>
-        <th class="category">Category</th>
-        <th class="type">Type</th>
-        <th class="item">Item</th>
-        <th class="weight">Weight</th>
-        <th class="quantity">Quantity</th>
-        <th class="total-weight">Total Weight</th>
-    </tr>
-    {% for item in worn_items %}
-    <tr{% if item.item.archived%} class="archived"{% endif %}>
-        <td class="category">{{ item.item.category|capfirst }}</td>
-        <td class="type">{{ item.item.type.name|capfirst }}</td>
-        <td class="item">
-            {% if item.item.archived %}
-            {{ item.item }}
-            {% else %}
-            <a href="{% url geartracker_item_detail slug=item.item.slug %}" rel="bookmark" title="Link to {{ item.item }}">{{ item.item }}</a>
-            {% endif %}
-        </td>
-        <td class="weight">{{ item.item.metric_weight }}</td>
-        <td class="quantity">{{ item.quantity }}</td>
-        <td class="total-weight">{{ item.total_metric_weight }}</td>
-    </tr>
-    {% endfor %}
-    <tr class="total">
-        <td class="title" colspan="5">Total weight:</td>
-        <td>{{ list.worn_metric_weight }} ({{ list.worn_imperial_weight }})</td>
-    </tr>
-    </table>
+    {% if perms.geartracker.change_item %}
+    <a title="Edit {{ list }}" class="edit" href="{% url admin:geartracker_list_change list.id %}">Edit</a>
     {% endif %}
 
-    {% if packed_items %}
-    <h2>Packed Items</h2>
+    <p id="trip-date">
+    {% spaceless %}
+    {% if list.start_date = list.end_date %}
+    {{ list.start_date }}
+    {% else %}
+    {{ list.start_date }} &#8211; {{ list.end_date }}
+    {% endif %}
+    {% endspaceless %}
+    </p>
 
-    <table class="gear-list">
-    <tr>
-        <th class="category">Category</th>
-        <th class="type">Type</th>
-        <th class="item">Item</th>
-        <th class="weight">Weight</th>
-        <th class="quantity">Quantity</th>
-        <th class="total-weight">Total Weight</th>
-    </tr>
-    {% for item in packed_items %}
-    <tr{% if item.item.archived%} class="archived"{% endif %}>
-        <td class="category">{{ item.item.category|capfirst }}</td>
-        <td class="type">{{ item.item.type.name|capfirst }}</td>
-        <td class="item">
-            {% if item.item.archived %}
-            {{ item.item }}
-            {% else %}
-            <a href="{% url geartracker_item_detail slug=item.item.slug %}" rel="bookmark" title="Link to {{ item.item }}">{{ item.item }}</a>
-            {% endif %}
-        </td>
-        <td class="weight">{{ item.item.metric_weight }}</td>
-        <td class="quantity">{{ item.quantity }}</td>
-        <td class="total-weight">{{ item.total_metric_weight }}</td>
-    </tr>
-    {% endfor %}
-    <tr class="total">
-        <td class="title" colspan="5">Total weight:</td>
-        <td>{{ list.packed_metric_weight }} ({{ list.packed_imperial_weight }})</td>
-    </tr>
-    </table>
+    {% if list.location or list.trip_report %}
+    <dl>
+        {% if list.location %}
+        <dt>Location:</dt>
+            <dd>{{ list.location|safe }}</dd>
+        {% endif %}
+        {% if list.trip_report %}
+        <dt>Report:</dt>
+            <dd><a href="{{ list.trip_report }}" title="Read the trip report">Trip Report</a></dd>
+        {% endif %}
+    </dl>
     {% endif %}
 
-    <h2>Total Weight</h2>
-    <p id="the-total">{{ list.total_metric_weight }} ({{ list.total_imperial_weight }})</p>
-</div>
+    <div class="list-details">
+        {% if worn_items %}
+        <div class="worn-items">
+            <h2>Worn Items</h2>
+            {% with list=worn_items metric_weight=list.worn_metric_weight imperial_weight=list.worn_imperial_weight %}
+                {% include "geartracker/includes/list_table.html" %}
+            {% endwith %}
+        </div>
+        {% endif %}
+
+        {% if packed_items %}
+        <div class="packed-items">
+            <h2>Packed Items</h2>
+            {% with list=packed_items metric_weight=list.packed_metric_weight imperial_weight=list.packed_imperial_weight %}
+                {% include "geartracker/includes/list_table.html" %}
+            {% endwith %}
+        </div>
+        {% endif %}
+
+        <h2>Total Weight</h2>
+        <p id="the-total">{{ list.total_metric_weight }} ({{ list.total_imperial_weight }})</p>
+    </div>
 {% endblock %}
