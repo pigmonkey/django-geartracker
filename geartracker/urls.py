@@ -6,7 +6,7 @@ from geartracker.views import *
 urlpatterns = patterns('',
     url(r'^$',
         view = index,
-        name = 'geartracker_home'
+        name = 'geartracker'
     ),
     url(r'^all/$',
         view=ItemListView.as_view(),
