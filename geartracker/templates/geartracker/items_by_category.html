@@ -1,6 +1,6 @@
 {% extends "geartracker/base_geartracker.html" %}
 
-{% block title %}{{ category|capfirst }}{% if is_paginated %} | Page {{ page }}{% endif %}{% endblock %}
+{% block title %}{{ category|capfirst }}{% if is_paginated %} (Page {{ page }}){% endif %} | {{ block.super }}{% endblock %}
 {% block body_id %}geartracker-category-list{% endblock %}
 
 {% block content %}

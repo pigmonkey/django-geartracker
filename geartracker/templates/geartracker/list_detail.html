@@ -1,6 +1,6 @@
 {% extends "geartracker/base_geartracker.html" %}
 
-{% block title %}{{ list }}: Gear List{% endblock %}
+{% block title %}{{ list }} | {{ block.super }}{% endblock %}
 {% block body_class %}geartracker-list{% endblock %}
 {% block body_id %}geartacker-list-{{ list.id }}{% endblock %}
 

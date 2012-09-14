@@ -2,7 +2,7 @@
 
 {% load taggit_extras %}
 
-{% block title %}Tags{% endblock %}
+{% block title %}Tags | {{ block.super }}{% endblock %}
 {% block body_id %}geartracker-tag-list{% endblock %}
 
 {% block content %}
