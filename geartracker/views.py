@@ -2,7 +2,7 @@ from operator import attrgetter, itemgetter
 
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import DetailView, ListView, TemplateView
 
@@ -14,12 +14,12 @@ from geartracker import settings
 
 class ItemDetailView(DetailView):
     """Display a single item."""
-    model = Item
+    queryset = Item.objects.published()
 
 
 class ItemListView(ListView):
     """Display a list of items."""
-    model = Item
+    queryset = Item.objects.published()
     paginate_by = settings.GEARTRACKER_PAGINATE_BY
 
 
@@ -28,65 +28,78 @@ class CategoryListView(ListView):
     model = Category
 
 
-class CategoryDetailView(DetailView):
+class CategoryDetailView(ListView):
     """Display all items in a given category."""
-    model = Category
     paginate_by = settings.GEARTRACKER_PAGINATE_BY
+
+    def category(self, **kwargs):
+        return get_object_or_404(Category, slug=self.kwargs['slug'])
+
+    def get_queryset(self, **kwargs):
+        return Item.objects.published().filter(category=self.category)
+
+    def get_template_names(self, **kwargs):
+        return 'geartracker/category_detail.html'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context.
         context = super(CategoryDetailView, self).get_context_data(**kwargs)
-        # Add a queryset of all items in the category.
-        context['object_list'] = Item.objects.filter(category__slug=self.kwargs['slug'])
+        # Add the category to the context.
+        context['category'] = self.category
         return context
 
 
-class TypeDetailView(DetailView):
+class TypeDetailView(ListView):
     """Display all items of a given type."""
     paginate_by = settings.GEARTRACKER_PAGINATE_BY
 
-    def category(self):
-        try:
-            category = Category.objects.get(slug=self.kwargs['category'])
-        except ObjectDoesNotExist:
-            raise Http404
-        return category
+    def category(self, **kwargs):
+        return get_object_or_404(Category, slug=self.kwargs['category'])
 
-    def get_object(self):
-        try:
-            type = Type.objects.get(category=self.category,
-                                    slug=self.kwargs['slug'])
-        except ObjectDoesNotExist:
-            raise Http404
-        return type
+    def type(self, **kwargs):
+        return get_object_or_404(Type, category=self.category,
+                                 slug=self.kwargs['slug'])
+
+    def get_queryset(self, **kwargs):
+        return Item.objects.published().filter(type=self.type)
+
+    def get_template_names(self, **kwargs):
+        return 'geartracker/type_detail.html'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context.
         context = super(TypeDetailView, self).get_context_data(**kwargs)
-        # Add the category object to the context.
+        # Add the category to the context.
         context['category'] = self.category
-        # Add a queryset of all items of the type.
-        context['object_list'] = Item.objects.filter(type=self.get_object())
+        # Add the type to the context.
+        context['type'] = self.type
         return context
 
-class TagDetailView(DetailView):
+class TagDetailView(ListView):
     """Display all items with a given tag."""
-    model = Tag
-    template_name = 'geartracker/tag_detail.html'
-    paginate_by = settings.GEARTRACKER_PAGINATE_BY
+    def tag(self, **kwargs):
+        return get_object_or_404(Tag, slug=self.kwargs['slug'])
+
+    def get_queryset(self, **kwargs):
+        return Item.objects.published().filter(tags=self.tag)
+
+    def get_template_names(self, **kwargs):
+        return 'geartracker/tag_detail.html'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context.
         context = super(TagDetailView, self).get_context_data(**kwargs)
-        # Add in a queryset of all items with the given tag.
-        context['object_list'] = Item.objects.filter(tags__slug=self.kwargs['slug'])
+        # Add in the tag to the context.
+        context['tag'] = self.tag
         return context
 
 
 class ListListView(ListView):
     """Display a list of gear lists."""
-    model = List
     paginate_by = settings.GEARTRACKER_PAGINATE_BY
+
+    def get_queryset(self, **kwargs):
+        return List.objects.filter(public=True)
 
 
 class ListDetailView(DetailView):
@@ -100,7 +113,7 @@ class ListDetailView(DetailView):
             raise Http404
         # Raise a 404 if the list is not public and the user does not have
         # permissions.
-        if (not object.public and
+        if (not object.public and not
                 self.request.user.has_perm('geartracker.add_list')):
             raise Http404
 
@@ -134,10 +147,10 @@ class ListDetailView(DetailView):
 def index(request):
 
     # Get items
-    items = Item.objects.filter(archived=False).order_by('-acquired')
+    items = Item.objects.published().order_by('-acquired')
 
     # Get lists
-    lists = List.objects.filter(public=True)
+    lists = List.objects.public()
 
     return render_to_response('geartracker/index.html',
                               {'item_list': items[:6],

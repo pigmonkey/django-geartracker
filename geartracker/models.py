@@ -3,6 +3,7 @@ from django.db import models
 from taggit.managers import TaggableManager
 from sorl.thumbnail import ImageField
 
+from geartracker.managers import PublicListManager, ArchivedItemManager
 from geartracker.mass import metric, imperial
 
 
@@ -69,6 +70,7 @@ class Item(models.Model):
     archived = models.BooleanField(default=False,
                                    help_text="Archived items are not publicly \
                                               viewable.")
+    objects = ArchivedItemManager()
 
     class Meta:
         ordering = ('make', 'model')
@@ -140,6 +142,7 @@ class List(models.Model):
                                   help_text="A URL to a trip report.")
     public = models.BooleanField(default=True)
     items = models.ManyToManyField(Item, through=ListItem)
+    objects = PublicListManager()
 
     class Meta:
         ordering = ('-start_date', 'end_date')
