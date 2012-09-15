@@ -1,0 +1,5 @@
+<ul class="page-list">
+    {% for page in paginator.page_range %}
+    <li {% if page = page_obj.number %}class="current"{% endif %}><a href="?page={{ page }}" title="Page {{ page }}">{{ page }}</a></li>
+    {% endfor %}
+</ul>
