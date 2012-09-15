@@ -3,6 +3,7 @@
 {% load thumbnail %}
 
 {% block title %}{{ item }} | {{ block.super }}{% endblock %}
+{% block description %}Details of {{ item.make }}'s {{ item.model }} ({{ item.metric_weight }}, {{ item.imperial_weight }}){% endblock %}
 {% block body_class %}geartracker-item geartracker-item-category-{{ item.category.slug }} geartracker-item-type-{{ item.type.slug }}{% endblock %}
 {% block body_id %}geartacker-item-{{ item.id }}{% endblock %}
 

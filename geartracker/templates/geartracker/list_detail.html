@@ -1,6 +1,7 @@
 {% extends "geartracker/base_geartracker.html" %}
 
 {% block title %}{{ list }} | {{ block.super }}{% endblock %}
+{% block description %}List of gear taken on {{ list }} ({{ list.total_metric_weight }}, {{ list.total_imperial_weight }}){% endblock %}
 {% block body_class %}geartracker-list{% endblock %}
 {% block body_id %}geartacker-list-{{ list.id }}{% endblock %}
 
