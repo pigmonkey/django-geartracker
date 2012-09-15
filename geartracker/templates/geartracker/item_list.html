@@ -1,10 +1,10 @@
 {% extends "geartracker/base_geartracker.html" %}
 
-{% block title %}{% if title %}{{ title }}{% else %}Gear{% endif %}{% if is_paginated %} (Page {{ page_obj.number }}){% endif %} | {{ block.super }}{% endblock %}
-{% block description %}{{ item_list|length }} item{{ item_list|pluralize }} in the database{% endblock %}
+{% block title %}Gear{% if is_paginated %} (Page {{ page_obj.number }}){% endif %} | {{ block.super }}{% endblock %}
+{% block description %}{{ object_list|length }} item{{ object_list|pluralize }} in the database{% endblock %}
 {% block body_id %}geartracker-gear-list{% endblock %}
 
 {% block content %}
-    <h1>{% if title %}{{ title }}{% else %}Gear{% endif %}</h1>
+    <h1>Gear</h1>
     {% include "geartracker/includes/list_items.html" %}
 {% endblock %}

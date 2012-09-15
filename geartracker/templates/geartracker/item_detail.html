@@ -23,8 +23,8 @@
     {% endif %}
 
     <ul class="breadcrumb">
-        <li><a href="{% url geartracker_category_items slug=item.category.slug  %}" title="View all gear in {{ item.category }}">{{ item.category|capfirst }}</a> {{ item.type.separator }}</li>
-        <li><a href="{% url geartracker_type_items category=item.category.slug type=item.type.slug %}" title="View all gear in {{ item.type.name }}">{{ item.type.name|capfirst }}</a></li>
+        <li><a href="{% url geartracker_category_detail slug=item.category.slug  %}" title="View all gear in {{ item.category }}">{{ item.category|capfirst }}</a> {{ item.type.separator }}</li>
+        <li><a href="{% url geartracker_type_detail category=item.category.slug slug=item.type.slug %}" title="View all gear in {{ item.type.name }}">{{ item.type.name|capfirst }}</a></li>
     </ul>
 
     {% if item.image %}
@@ -65,7 +65,7 @@
             <h2>Tags</h2>
             <ul>
                 {% for tag in item.tags.all %}
-                <li><a href="{% url geartracker_tag_items slug=tag.slug %}" rel="tag" title="View all gear tagged with {{ tag }}">{{ tag }}</a></li>
+                <li><a href="{% url geartracker_tag_detail slug=tag.slug %}" rel="tag" title="View all gear tagged with {{ tag }}">{{ tag }}</a></li>
                 {% endfor %}
             </ul>
         </li>

@@ -1,0 +1,10 @@
+{% extends "geartracker/base_geartracker.html" %}
+
+{% block title %}{{ category|capfirst }}{% if is_paginated %} (Page {{ page }}){% endif %} | {{ block.super }}{% endblock %}
+{% block description %}{{ object_list|length }} item{{ object_list|pluralize }} categorized as {{ category }}{% endblock %}
+{% block body_id %}geartracker-category-list{% endblock %}
+
+{% block content %}
+    <h1>{{ category|capfirst }}</h1>
+    {% include "geartracker/includes/list_items.html" %}
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
+from django.views.generic import TemplateView
 
-from geartracker.models import *
 from geartracker.views import *
 
 urlpatterns = patterns('',
@@ -17,20 +17,20 @@ urlpatterns = patterns('',
         name='geartracker_category_list'
     ),
     url(r'^category/(?P<slug>[-\w]+)/$',
-        view=CategoryItemsView.as_view(),
-        name='geartracker_category_items'
+        view=CategoryDetailView.as_view(),
+        name='geartracker_category_detail'
     ),
-    url(r'^category/(?P<category>[-\w]+)/(?P<type>[-\w]+)/$',
-        view=TypeItemsView.as_view(),
-        name = 'geartracker_type_items'
+    url(r'^category/(?P<category>[-\w]+)/(?P<slug>[-\w]+)/$',
+        view=TypeDetailView.as_view(),
+        name = 'geartracker_type_detail'
     ),
     url(r'^tags/$',
-        view=TagListView.as_view(),
+        view=TemplateView.as_view(template_name='geartracker/tag_list.html'),
         name='geartracker_tag_list'
     ),
     url(r'^tags/(?P<slug>[-\w]+)/$',
-        view=TagItemsView.as_view(),
-        name='geartracker_tag_items'
+        view=TagDetailView.as_view(),
+        name='geartracker_tag_detail'
     ),
     url(r'^list/$',
         view=ListListView.as_view(),
