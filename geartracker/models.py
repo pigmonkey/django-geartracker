@@ -83,7 +83,8 @@ class Item(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('geartracker.views.item_detail', [self.slug])
+        return ('geartracker_item_detail', None, {'slug': self.slug})
+
 
     @property
     def name(self):
@@ -152,7 +153,8 @@ class List(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('geartracker.views.gearlist_detail', [self.slug])
+        return ('geartracker_list_detail', None, {'slug': self.slug})
+
 
     def clean(self):
         from django.core.exceptions import ValidationError
