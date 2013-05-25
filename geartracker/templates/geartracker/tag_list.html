@@ -13,7 +13,7 @@
     {% if tags %}
     <ul class="tags">
         {% for tag in tags %}
-            <li><a href="{% url geartracker_tag_detail slug=tag.slug %}" title="View all gear tagged with {{ tag }}">{{ tag }}</a> ({{ tag.num_times }})</li>
+            <li><a href="{% url "geartracker_tag_detail" slug=tag.slug %}" title="View all gear tagged with {{ tag }}">{{ tag }}</a> ({{ tag.num_times }})</li>
         {% endfor %}
     </ul>
     {% else %}

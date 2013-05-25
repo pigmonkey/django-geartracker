@@ -19,12 +19,12 @@
     {% endspaceless %}
 
     {% if perms.geartracker.change_item %}
-    <a title="Edit {{ item }}" class="edit" href="{% url admin:geartracker_item_change item.id %}">Edit</a>
+    <a title="Edit {{ item }}" class="edit" href="{% url "admin:geartracker_item_change" item.id %}">Edit</a>
     {% endif %}
 
     <ul class="breadcrumb">
-        <li><a href="{% url geartracker_category_detail slug=item.category.slug  %}" title="View all gear in {{ item.category }}">{{ item.category|capfirst }}</a> {{ item.type.separator }}</li>
-        <li><a href="{% url geartracker_type_detail category=item.category.slug slug=item.type.slug %}" title="View all gear in {{ item.type.name }}">{{ item.type.name|capfirst }}</a></li>
+        <li><a href="{% url "geartracker_category_detail" slug=item.category.slug  %}" title="View all gear in {{ item.category }}">{{ item.category|capfirst }}</a> {{ item.type.separator }}</li>
+        <li><a href="{% url "geartracker_type_detail" category=item.category.slug slug=item.type.slug %}" title="View all gear in {{ item.type.name }}">{{ item.type.name|capfirst }}</a></li>
     </ul>
 
     {% if item.image %}
@@ -65,7 +65,7 @@
             <h2>Tags</h2>
             <ul>
                 {% for tag in item.tags.all %}
-                <li><a href="{% url geartracker_tag_detail slug=tag.slug %}" rel="tag" title="View all gear tagged with {{ tag }}">{{ tag }}</a></li>
+                <li><a href="{% url "geartracker_tag_detail" slug=tag.slug %}" rel="tag" title="View all gear tagged with {{ tag }}">{{ tag }}</a></li>
                 {% endfor %}
             </ul>
         </li>
@@ -75,7 +75,7 @@
             <h2>Related Items</h2>
             <ul>
                 {% for other in item.related.all %}
-                <li><a href="{% url geartracker_item_detail other.slug %}" title="Link to {{ other }}" rel="bookmark">{{ other }}</a></li>
+                <li><a href="{% url "geartracker.views.item_detail" slug=other.slug %}" title="Link to {{ other }}" rel="bookmark">{{ other }}</a></li>
                 {% endfor %}
             </ul>
         </li>

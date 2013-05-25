@@ -2,7 +2,7 @@
 <ul class="item-list">
     {% for item in object_list %}
         <li class="item">
-            <h2 class="item-title"><a href="{% url geartracker_item_detail item.slug %}" rel="bookmark" title="Link to {{ item }}">{{ item }}</a></h2>
+            <h2 class="item-title"><a href="{% url "geartracker_item_detail" item.slug %}" rel="bookmark" title="Link to {{ item }}">{{ item }}</a></h2>
             <dl class="item-brief">
                 <dt class="item-weight-metric">Metric Weight</dt>
                     <dd class="item-weight-metric">{{ item.metric_weight }}</dd>

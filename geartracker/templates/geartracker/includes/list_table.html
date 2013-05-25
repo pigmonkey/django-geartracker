@@ -18,7 +18,7 @@
             {% if item.item.archived %}
             {{ item.item }}
             {% else %}
-            <a href="{% url geartracker_item_detail slug=item.item.slug %}" rel="bookmark" title="Link to {{ item.item }}">{{ item.item }}</a>
+            <a href="{% url "geartracker_item_detail" slug=item.item.slug %}" rel="bookmark" title="Link to {{ item.item }}">{{ item.item }}</a>
             {% endif %}
         </td>
         <td class="weight">{{ item.item.metric_weight }}</td>
