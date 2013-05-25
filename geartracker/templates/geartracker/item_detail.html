@@ -75,7 +75,7 @@
             <h2>Related Items</h2>
             <ul>
                 {% for other in item.related.all %}
-                <li><a href="{% url "geartracker.views.item_detail" slug=other.slug %}" title="Link to {{ other }}" rel="bookmark">{{ other }}</a></li>
+                <li><a href="{% url "geartracker_item_detail" slug=other.slug %}" title="Link to {{ other }}" rel="bookmark">{{ other }}</a></li>
                 {% endfor %}
             </ul>
         </li>
